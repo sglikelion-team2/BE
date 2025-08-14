@@ -3,10 +3,10 @@ server:
 
 spring:
   application:
-    name: side-project-blog
+    name: zarit
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_name?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/zarit?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: woori
     password: 1234
