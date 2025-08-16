@@ -1,14 +1,10 @@
 package wooribe.zarit.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 public class AtmosRequest {
-    private MultipartFile photo;
     private String pin_name;
 }

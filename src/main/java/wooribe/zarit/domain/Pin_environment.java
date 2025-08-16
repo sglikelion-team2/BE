@@ -25,6 +25,22 @@ public class Pin_environment {
     private double wifi;
 
     @Column(nullable = false)
+    private double plugbar;
+
+    @Column(nullable = false)
     private double congestion;
+
+    // 평균 계산
+    public void updateNoise(double newAverageNoise) {
+        this.noise = newAverageNoise;
+    }
+
+    public void updateWifi(double newAverageWifi) {
+        this.wifi = newAverageWifi;
+    }
+
+    public void updatePlugbar(double newAveragePlugbar) {
+        this.plugbar = newAveragePlugbar;
+    }
 
 }

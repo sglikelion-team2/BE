@@ -49,25 +49,25 @@ public class Pin {
     @Column(columnDefinition = "DOUBLE DEFAULT 3.0")
     private Double rate = 3.0;
 
-    @OneToOne(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "pin")
     private Pin_environment pin_environment;
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pin")
     private List<Pin_noise> pin_noises = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pin")
     private List<Pin_photo> pin_photos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pin")
     private List<Pin_plugbar> pin_plugbars = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pin")
     private List<Pin_wifi> pin_wifis = new ArrayList<>();
 
     @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Photo> photos = new ArrayList<>();
 
-    // 네가 직접 작성한 생성자 (빠진 필드 추가)
+
     public Pin(String name, String address, int category, String pin_info, Boolean is_partnered, String seat, Double lat, Double lng, LocalTime open_hour, LocalTime close_hour, Double rate) {
         this.name = name;
         this.address = address;
@@ -88,4 +88,6 @@ public class Pin {
         }
 
     }
+
+
 }

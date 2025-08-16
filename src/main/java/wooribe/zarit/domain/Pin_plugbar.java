@@ -1,12 +1,14 @@
 package wooribe.zarit.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pin_plugbar")
 public class Pin_plugbar {
 
@@ -19,4 +21,9 @@ public class Pin_plugbar {
     private Pin pin;
 
     private int plugbar;
+
+    public Pin_plugbar(Pin pin, int plugbar) {
+        this.pin = pin;
+        this.plugbar = plugbar;
+    }
 }

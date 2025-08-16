@@ -1,13 +1,15 @@
 package wooribe.zarit.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "pin_plugbar")
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table(name = "pin_wifi")
 public class Pin_wifi {
 
     @Id
@@ -19,4 +21,9 @@ public class Pin_wifi {
     private Pin pin;
 
     private int wifi;
+
+    public Pin_wifi(Pin pin, int wifi) {
+        this.pin = pin;
+        this.wifi = wifi;
+    }
 }

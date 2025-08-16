@@ -26,4 +26,10 @@ public class User {
     @Column(name = "point")// 컬럼명을 명시적으로 지정
     @ColumnDefault("0")
     private int point;
+
+    public void addPoint(int pointsToAdd) {
+        if (pointsToAdd > 0) { // 양수만 더하도록 검증
+            this.point += pointsToAdd;
+        }
+    }
 }
