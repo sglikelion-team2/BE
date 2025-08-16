@@ -1,8 +1,7 @@
 package wooribe.zarit.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import wooribe.zarit.domain.User;
 import wooribe.zarit.domain.enums.Atmos;
 import wooribe.zarit.domain.enums.Facility;
@@ -11,6 +10,10 @@ import wooribe.zarit.domain.enums.Purpose;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+
 @Table(name = "user_preference")
 public class User_preference {
 
@@ -34,4 +37,12 @@ public class User_preference {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Facility facility = Facility.POWER; // 기본값 '콘센트(0)'
+
+    // 선호도 정보를 업데이트하는 메서드 추가
+    public void update(Purpose purpose, Atmos atmos, Facility facility) {
+        this.purpose = purpose;
+        this.atmos = atmos;
+        this.facility = facility;
+    }
+
 }
