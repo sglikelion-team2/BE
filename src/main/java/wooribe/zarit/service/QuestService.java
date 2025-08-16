@@ -21,6 +21,7 @@ public class QuestService {
     private final PinWifiRepository pinWifiRepository;
     private final PinPlugbarRepository pinPlugbarRepository;
     private final PinRepository pinRepository;
+    private final PinEnvironmentRepository pinEnvironmentRepository;
     private final PinPhotoRepository pinPhotoRepository;
     private final LocalFileStorageService fileStorageService;
 
@@ -35,6 +36,21 @@ public class QuestService {
         Pin pin = pinRepository.findByName(request.getPin_name())
                 .orElseThrow(() -> new IllegalArgumentException("핀을 찾을 수 없습니다."));
 
+        // Pin_environment 찾기
+        Pin_environment pinEnvironment = pinEnvironmentRepository.findById(pin.getId())
+                .orElseGet(() -> {
+                            // 없으면 새로운 Pin_environment 엔티티를 만들어서 반환
+                            Pin_environment newEnv = Pin_environment.builder()
+                                    .pin(pin)
+                                    .noise(0.0)
+                                    .wifi(0.0)
+                                    .plugbar(0.0)
+                                    .congestion(0.0)
+                                    .build();
+                            pinEnvironmentRepository.save(newEnv);
+                            return newEnv;
+                });
+
         // 새로운 소음 정보 저장
         Pin_noise newPinNoise = new Pin_noise(pin, request.getNoise());
         pinNoiseRepository.save(newPinNoise);
@@ -47,7 +63,7 @@ public class QuestService {
                 .orElse(0.0);
 
         // 평균 업데이트
-        pin.updateAverageNoise(averageNoise);
+        pinEnvironment.updateNoise(averageNoise);
         //pinRepository.save(pin);
 
         int points = 10;
@@ -67,6 +83,21 @@ public class QuestService {
         Pin pin = pinRepository.findByName(request.getPin_name())
                 .orElseThrow(() -> new IllegalArgumentException("핀을 찾을 수 없습니다."));
 
+        // Pin_environment 찾기
+        Pin_environment pinEnvironment = pinEnvironmentRepository.findById(pin.getId())
+                .orElseGet(() -> {
+                    // 없으면 새로운 Pin_environment 엔티티를 만들어서 반환
+                    Pin_environment newEnv = Pin_environment.builder()
+                            .pin(pin)
+                            .noise(0.0)
+                            .wifi(0.0)
+                            .plugbar(0.0)
+                            .congestion(0.0)
+                            .build();
+                    pinEnvironmentRepository.save(newEnv);
+                    return newEnv;
+                });
+
         Pin_wifi newPinWifi = new Pin_wifi(pin, request.getWifi());
         pinWifiRepository.save(newPinWifi);
 
@@ -77,7 +108,7 @@ public class QuestService {
                 .orElse(0.0);
 
         // 평균 업데이트
-        pin.updateAverageWifi(averageWifi);
+        pinEnvironment.updateWifi(averageWifi);
         //pinRepository.save(pin);
 
         int points = 5;
@@ -96,6 +127,20 @@ public class QuestService {
         Pin pin = pinRepository.findByName(request.getPin_name())
                 .orElseThrow(() -> new IllegalArgumentException("핀을 찾을 수 없습니다."));
 
+        Pin_environment pinEnvironment = pinEnvironmentRepository.findById(pin.getId())
+                .orElseGet(() -> {
+                    // 없으면 새로운 Pin_environment 엔티티를 만들어서 반환
+                    Pin_environment newEnv = Pin_environment.builder()
+                            .pin(pin)
+                            .noise(0.0)
+                            .wifi(0.0)
+                            .plugbar(0.0)
+                            .congestion(0.0)
+                            .build();
+                    pinEnvironmentRepository.save(newEnv);
+                    return newEnv;
+                });
+
         Pin_plugbar newPinPlugbar = new Pin_plugbar(pin, request.getPlugbar());
         pinPlugbarRepository.save(newPinPlugbar);
 
@@ -106,7 +151,7 @@ public class QuestService {
                 .orElse(0.0);
 
         // 평균 업데이트
-        pin.updateAveragePlugbar(averagePlugbar);
+        pinEnvironment.updatePlugbar(averagePlugbar);
         //pinRepository.save(pin);
 
         int points = 7;

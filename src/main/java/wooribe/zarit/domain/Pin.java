@@ -67,27 +67,6 @@ public class Pin {
     @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Photo> photos = new ArrayList<>();
 
-    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
-    private Double averageNoise = 0.0;
-
-    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
-    private Double averageWifi = 0.0;
-
-    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
-    private Double averagePlugbar = 0.0;
-
-    // 평균 계산
-    public void updateAverageNoise(double newAverageNoise) {
-        this.averageNoise = newAverageNoise;
-    }
-
-    public void updateAverageWifi(double newAverageWifi) {
-        this.averageWifi = newAverageWifi;
-    }
-
-    public void updateAveragePlugbar(double newAveragePlugbar) {
-        this.averagePlugbar = newAveragePlugbar;
-    }
 
     public Pin(String name, String address, int category, String pin_info, Boolean is_partnered, String seat, Double lat, Double lng, LocalTime open_hour, LocalTime close_hour, Double rate) {
         this.name = name;
