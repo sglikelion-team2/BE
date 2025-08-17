@@ -164,6 +164,9 @@ public class QuestService {
     // 사진 퀘스트
     @Transactional
     public QuestResponse completePhotoQuest(String userName, String pinName, MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("사진 파일을 첨부해주세요.");
+        }
         // 1. 사용자 및 핀 정보 찾기
         User user = userRepository.findByName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));

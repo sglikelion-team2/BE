@@ -8,13 +8,13 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ApiResponse <T>{
-    private boolean success;
+    private boolean isSuccess;
     private int code;
     private String message;
     private T result;
 
     public ApiResponse(boolean success, int code, String message) {
-        this.success = success;
+        this.isSuccess = success;
         this.code = code;
         this.message = message;
     }
