@@ -32,13 +32,21 @@ public class UserService {
         String userName = request.getName();
 
         Optional<User> optionalUser = userRepository.findByName(userName);
+        User user;
+        int code;
+        String message;
 
-        // 사용자가 없으면 신규 유저를 만들고 DB에 저장한다. 있으면 기존 유저를 가져온다.
-        User user = optionalUser.orElseGet(() -> userRepository.save(request.toEntity()));
-
-        // 201 (신규 계정) or 200 (기존 계정) 판단
-        int code = userRepository.findByName(userName).isPresent() ? 200 : 201;
-        String message = (code == 201) ? "계정 생성 성공" : "로그인 성공";
+        if (optionalUser.isPresent()) {
+            // 이미 있는 유저
+            user = optionalUser.get();
+            code = 200;
+            message = "로그인 성공";
+        } else {
+            // 새로운 유저
+            user = userRepository.save(request.toEntity());
+            code = 201;
+            message = "계정 생성 성공";
+        }
 
         return new ApiResponse(true, code, message, UserResponse.of(user));
 

@@ -44,7 +44,7 @@ public class QuestController {
                 .body(new ApiResponse(true, 200, "콘센트 퀘스트 완료", response));
     }
 
-    @PostMapping("/{name}/photo")
+    @PostMapping("/{name}/atmos")
     public ResponseEntity<ApiResponse> completePhotoQuest(
             @PathVariable("name") String name,
             @RequestParam("pin_name") String pinName,
