@@ -12,3 +12,4 @@ public interface PinRepository extends JpaRepository<Pin, Long> {
     // ID를 기준으로 오름차순 정렬하여 상위 5개만 조회하는 메서드
     List<Pin> findTop5ByOrderByIdAsc();
 }
+
