@@ -6,9 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import wooribe.zarit.domain.Pin;
 import wooribe.zarit.domain.Pin_environment;
+import wooribe.zarit.domain.Photo;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 public class CafeSummaryDto {
@@ -17,7 +20,7 @@ public class CafeSummaryDto {
     private final String pinname;
     private final double lat;
     private final double lng;
-    private final String category; // int -> String으로 변경
+    private final String category;
     private final boolean is_partnered;
     private final String address;
     private final Map<String, Integer> seat;
@@ -27,14 +30,15 @@ public class CafeSummaryDto {
     private final int congestion;
     private final String open_hour;
     private final String close_hour;
-    private final String img_url;
+    private final String img_url1;
+    private final String img_url2;
 
     public CafeSummaryDto(Pin pin, int rank) {
         this.rank = rank;
         this.pinname = pin.getName();
         this.lat = pin.getLat();
         this.lng = pin.getLng();
-        this.category = pin.getCategory(); // 타입 변경으로 인해 자동 매핑
+        this.category = pin.getCategory();
         this.is_partnered = pin.getIs_partnered();
         this.address = pin.getAddress();
         this.seat = parseSeatInfo(pin.getSeat());
@@ -53,11 +57,15 @@ public class CafeSummaryDto {
             this.congestion = 0;
         }
 
-        if (pin.getPhotos() != null && !pin.getPhotos().isEmpty()) {
-            this.img_url = pin.getPhotos().get(0).getPhoto(); // 첫 번째 사진을 대표 이미지로 사용
-        } else {
-            this.img_url = null; // 사진이 없을 경우 null
-        }
+        // is_cafe가 true인 사진 목록을 가져옴
+        List<String> cafePhotoUrls = pin.getPhotos().stream()
+                .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
+                .map(Photo::getPhoto)
+                .collect(Collectors.toList());
+
+        // 첫 번째와 두 번째 사진 URL을 할당
+        this.img_url1 = cafePhotoUrls.size() > 0 ? cafePhotoUrls.get(0) : null;
+        this.img_url2 = cafePhotoUrls.size() > 1 ? cafePhotoUrls.get(1) : null;
     }
 
     private Map<String, Integer> parseSeatInfo(String seatJson) {

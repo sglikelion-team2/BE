@@ -23,6 +23,7 @@ public class QuestService {
     private final PinRepository pinRepository;
     private final PinEnvironmentRepository pinEnvironmentRepository;
     private final PinPhotoRepository pinPhotoRepository;
+    private final PhotoRepository photoRepository; // PhotoRepository 주입 추가
     private final LocalFileStorageService fileStorageService;
 
     // 소음 퀘스트
@@ -64,14 +65,11 @@ public class QuestService {
 
         // 평균 업데이트
         pinEnvironment.updateNoise(averageNoise);
-        //pinRepository.save(pin);
 
         int points = 10;
         user.addPoint(points);
 
         return QuestResponse.of("noise", points);
-
-
     }
 
     // 와이파이 퀘스트
@@ -86,7 +84,6 @@ public class QuestService {
         // Pin_environment 찾기
         Pin_environment pinEnvironment = pinEnvironmentRepository.findById(pin.getId())
                 .orElseGet(() -> {
-                    // 없으면 새로운 Pin_environment 엔티티를 만들어서 반환
                     Pin_environment newEnv = Pin_environment.builder()
                             .pin(pin)
                             .noise(0.0)
@@ -107,15 +104,12 @@ public class QuestService {
                 .average()
                 .orElse(0.0);
 
-        // 평균 업데이트
         pinEnvironment.updateWifi(averageWifi);
-        //pinRepository.save(pin);
 
         int points = 5;
         user.addPoint(points);
 
         return QuestResponse.of("wifi", points);
-
     }
 
     // 콘센트 퀘스트
@@ -129,7 +123,6 @@ public class QuestService {
 
         Pin_environment pinEnvironment = pinEnvironmentRepository.findById(pin.getId())
                 .orElseGet(() -> {
-                    // 없으면 새로운 Pin_environment 엔티티를 만들어서 반환
                     Pin_environment newEnv = Pin_environment.builder()
                             .pin(pin)
                             .noise(0.0)
@@ -150,15 +143,12 @@ public class QuestService {
                 .average()
                 .orElse(0.0);
 
-        // 평균 업데이트
         pinEnvironment.updatePlugbar(averagePlugbar);
-        //pinRepository.save(pin);
 
         int points = 7;
         user.addPoint(points);
 
         return QuestResponse.of("plugbar", points);
-
     }
 
     // 사진 퀘스트
@@ -167,29 +157,31 @@ public class QuestService {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("사진 파일을 첨부해주세요.");
         }
-        // 1. 사용자 및 핀 정보 찾기
         User user = userRepository.findByName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         Pin pin = pinRepository.findByName(pinName)
                 .orElseThrow(() -> new IllegalArgumentException("핀을 찾을 수 없습니다."));
 
-        // 2. 파일 저장
-        String photo = fileStorageService.saveFile(file, "photos"); // 파일 저장 로직은 별도 서비스에서
+        String photoUrl = fileStorageService.saveFile(file, "photos");
 
-        // 3. Pin_photo 엔티티 생성 및 저장
+        // 1. Pin_photo 엔티티 생성 및 저장 (기존 로직)
         Pin_photo pinPhoto = new Pin_photo();
         pinPhoto.setPin(pin);
-        pinPhoto.setPhoto(photo);
+        pinPhoto.setPhoto(photoUrl);
         pinPhotoRepository.save(pinPhoto);
 
-        // 4. 포인트 지급
+        // 2. Photo 엔티티 생성 및 저장 (새로 추가된 로직)
+        Photo newPhoto = Photo.builder()
+                .pin(pin)
+                .photo(photoUrl)
+                .is_cafe(false) // 퀘스트로 올리는 사진은 카페랑 제휴맺은게 아니니 사진으로 간주
+                .build();
+        photoRepository.save(newPhoto);
+
         int points = 20;
         user.addPoint(points);
 
         return QuestResponse.of("photo", points);
     }
-
-
-
 }

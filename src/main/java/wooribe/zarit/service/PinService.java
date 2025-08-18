@@ -26,31 +26,26 @@ public class PinService {
     }
 
     public MainPageResponseDto getMainPageInfo(String userName, double lat, double lng) {
-        // 1. 사용자 정보 조회
         User user = userRepository.findByName(userName)
                 .orElseThrow(() -> new NoSuchElementException("해당 사용자가 없음!!"));
 
-        // 2. 위치 기반 핀 정보 조회 (현재는 모든 핀을 가져옴)
-        // TODO: lat, lng를 사용하여 근처 핀만 가져오는 로직으로 고도화 필요
-        List<Pin> nearbyPins = pinRepository.findAll();
+        // 위치 기반으로 1km 이내의 핀 정보 조회
+        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 1.0); // 1.0km
 
-        // 3. TOP 5 핀 목록을 가져와 랭킹 확인용으로 사용
         List<Long> top5PinIds = pinRepository.findTop5ByOrderByIdAsc().stream()
                 .map(Pin::getId)
                 .collect(Collectors.toList());
 
-        // 4. 응답 DTO 리스트 생성
         List<MainPagePinDto> mainPagePins = new ArrayList<>();
         for (Pin pin : nearbyPins) {
             int rank = 0;
             int top5Index = top5PinIds.indexOf(pin.getId());
             if (top5Index != -1) {
-                rank = top5Index + 1; // 0-based index to 1-based rank
+                rank = top5Index + 1; 
             }
             mainPagePins.add(new MainPagePinDto(pin, rank));
         }
 
-        // 5. 최종 응답 DTO 생성 및 반환
         return new MainPageResponseDto(user.getName(), user.getPoint(), mainPagePins);
     }
 
@@ -79,6 +74,7 @@ public class PinService {
         }
 
         List<String> imageUrls = pin.getPhotos().stream()
+                .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
                 .map(Photo::getPhoto)
                 .collect(Collectors.toList());
 
@@ -90,6 +86,7 @@ public class PinService {
                 .orElseThrow(() -> new NoSuchElementException("해당하는 카페를 찾을 수 없습니다."));
 
         List<String> imageUrls = pin.getPhotos().stream()
+                .filter(photo -> photo.getIs_cafe() != null && !photo.getIs_cafe())
                 .map(Photo::getPhoto)
                 .collect(Collectors.toList());
 
