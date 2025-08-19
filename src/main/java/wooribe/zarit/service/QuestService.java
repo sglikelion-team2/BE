@@ -175,7 +175,7 @@ public class QuestService {
         Photo newPhoto = Photo.builder()
                 .pin(pin)
                 .photo(photoUrl)
-                .is_cafe(false) // 퀘스트로 올리는 사진은 카페랑 제휴맺은게 아니니 사진으로 간주
+                .is_cafe(false) // 퀘스트로 올리는 사진은 카페올린게 아님
                 .build();
         photoRepository.save(newPhoto);
 
