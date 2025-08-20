@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import wooribe.zarit.domain.Pin;
-import wooribe.zarit.domain.Pin_environment;
 import wooribe.zarit.domain.Photo;
 
 import java.time.format.DateTimeFormatter;
@@ -27,13 +26,13 @@ public class CafeSummaryDto {
     private final int noise;
     private final int wifi;
     private final double rate;
-    private final int congestion;
+    private final int congestion; // 0: 여유, 1: 보통, 2: 혼잡
     private final String open_hour;
     private final String close_hour;
     private final String img_url1;
     private final String img_url2;
 
-    public CafeSummaryDto(Pin pin, int rank) {
+    public CafeSummaryDto(Pin pin, int rank, int noise, int wifi, int congestion) {
         this.rank = rank;
         this.pinname = pin.getName();
         this.lat = pin.getLat();
@@ -46,16 +45,9 @@ public class CafeSummaryDto {
         this.open_hour = pin.getOpen_hour().format(DateTimeFormatter.ofPattern("HH:mm"));
         this.close_hour = pin.getClose_hour().format(DateTimeFormatter.ofPattern("HH:mm"));
 
-        Pin_environment env = pin.getPin_environment();
-        if (env != null) {
-            this.noise = (int) env.getNoise();
-            this.wifi = (int) env.getWifi();
-            this.congestion = (int) env.getCongestion();
-        } else {
-            this.noise = 0;
-            this.wifi = 0;
-            this.congestion = 0;
-        }
+        this.noise = noise;
+        this.wifi = wifi;
+        this.congestion = congestion;
 
         // is_cafe가 true인 사진 목록을 가져옴
         List<String> cafePhotoUrls = pin.getPhotos().stream()

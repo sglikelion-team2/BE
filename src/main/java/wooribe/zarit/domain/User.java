@@ -27,6 +27,13 @@ public class User {
     @ColumnDefault("0")
     private int point;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User_preference user_preference;
+
+    // UserRecommendation과의 양방향 일대일 관계 설정
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserRecommendation userRecommendation;
+
     public void addPoint(int pointsToAdd) {
         if (pointsToAdd > 0) { // 양수만 더하도록 검증
             this.point += pointsToAdd;

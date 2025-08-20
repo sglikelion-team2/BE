@@ -34,19 +34,33 @@ public class CafeController {
             BaseResponse<MainPageResponseDto> response = new BaseResponse<>("성공적으로 불러옴~", mainPageInfo);
             return ResponseEntity.ok(response);
         } catch (NoSuchElementException e) {
-            // PinService에서 "해당 사용자가 없음!!" 메시지와 함께 예외를 던짐
             return ResponseEntity.status(404).body(new BaseResponse<>(false, 404, e.getMessage()));
         }
     }
 
-    @GetMapping("/mainpage/top5")
-    public ResponseEntity<BaseResponse<Top5CafeResponseDto>> getTop5Cafes() {
-        Top5CafeResponseDto top5Cafes = pinService.getTop5Cafes();
-        BaseResponse<Top5CafeResponseDto> response = new BaseResponse<>("top 5~", top5Cafes);
-        return ResponseEntity.ok(response);
+    /**
+     * AI 기반 사용자 맞춤형 Top 5 카페 추천 API
+     */
+    @GetMapping("/mainpage/{name}/top5")
+    public ResponseEntity<BaseResponse<Top5CafeResponseDto>> getTop5Cafes(
+            @PathVariable("name") String name,
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng) {
+
+        if (lat == null || lng == null) {
+            return ResponseEntity.badRequest().body(new BaseResponse(false, 400, "위치 값 입력 안됨!!!"));
+        }
+
+        try {
+            Top5CafeResponseDto top5Cafes = pinService.getTop5Cafes(name, lat, lng);
+            BaseResponse<Top5CafeResponseDto> response = new BaseResponse<>("AI 추천 top 5~", top5Cafes);
+            return ResponseEntity.ok(response);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(new BaseResponse<>(false, 404, e.getMessage()));
+        }
     }
 
-    @GetMapping("/mainpage/{pin_name}")
+    @GetMapping("/mainpage/cafe/{pin_name}")
     public ResponseEntity<BaseResponse<?>> getCafeDetail(@PathVariable("pin_name") String pinName) {
 
         if (pinName == null || pinName.isBlank()) {
