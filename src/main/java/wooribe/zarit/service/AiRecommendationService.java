@@ -61,6 +61,7 @@ public class AiRecommendationService {
                     .orElseThrow(() -> new RuntimeException("AI 응답에서 content를 추출할 수 없습니다."));
 
             // AI가 반환한 JSON 배열 문자열을 List<String>으로 변환
+            System.out.println(jsonContent);
             return objectMapper.readValue(jsonContent, new TypeReference<List<String>>() {});
 
         } catch (Exception e) {

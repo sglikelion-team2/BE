@@ -12,10 +12,11 @@ public class MainPageResponseDto {
     private final int cnt;
     private final List<MainPagePinDto> pin;
 
-    public MainPageResponseDto(String name, int point, List<MainPagePinDto> pin) {
+    public MainPageResponseDto(String name, int point,int cnt, List<MainPagePinDto> pin) {
         this.name = name;
         this.point = point;
+        this.cnt = cnt;
         this.pin = pin;
-        this.cnt = pin.size(); // pin 목록의 개수를 cnt로 설정
+        //this.cnt = pin.size(); // pin 목록의 개수를 cnt로 설정
     }
 }
