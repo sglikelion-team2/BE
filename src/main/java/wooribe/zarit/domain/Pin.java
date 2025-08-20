@@ -67,7 +67,7 @@ public class Pin {
     @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Photo> photos = new ArrayList<>();
 
-    // 네가 직접 작성한 생성자 (빠진 필드 추가)
+    // 생성자 (빠진 필드 추가)
     public Pin(String name, String address, String category, String pin_info, Boolean is_partnered, String seat, Double lat, Double lng, LocalTime open_hour, LocalTime close_hour, Double rate) {
 
         this.name = name;

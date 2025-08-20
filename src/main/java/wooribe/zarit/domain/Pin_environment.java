@@ -43,4 +43,8 @@ public class Pin_environment {
         this.plugbar = newAveragePlugbar;
     }
 
+    // 혼잡도 업데이트
+    public void updateCongestion(double newCongestion) {
+        this.congestion = newCongestion;
+    }
 }
