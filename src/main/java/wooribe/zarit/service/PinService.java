@@ -1,6 +1,7 @@
 package wooribe.zarit.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooribe.zarit.domain.*;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PinService {
+
+    @Value("${application.url}")
+    private String serverAddress;
 
     private final PinRepository pinRepository;
     private final UserRepository userRepository;
@@ -120,11 +124,16 @@ public class PinService {
         int wifi = (env != null) ? (int) env.getWifi() : 0;
         double congestionValue = (env != null) ? env.getCongestion() : 0.0;
         int congestionLevel = convertCongestionLevel(congestionValue);
+        //String serverIp = "http://3.39.6.173:80"; // 나중에 배포할 때는 실제 서버 IP로 변경!
 
         List<String> imageUrls = pin.getPhotos().stream()
                 .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
-                .map(Photo::getPhoto)
+                .map(Photo::getPhoto) // 이제 변수를 사용!
                 .collect(Collectors.toList());
+//        List<String> imageUrls = pin.getPhotos().stream()
+//                .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
+//                .map(Photo::getPhoto)
+//                .collect(Collectors.toList());
 
         return new CafeDetailResponseDto(pin, noise, wifi, congestionLevel, imageUrls);
     }

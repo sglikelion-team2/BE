@@ -46,6 +46,7 @@ public class CafeDetailResponseDto {
         this.open_hour = pin.getOpen_hour().format(DateTimeFormatter.ofPattern("HH:mm"));
         this.close_hour = pin.getClose_hour().format(DateTimeFormatter.ofPattern("HH:mm"));
 
+
         if (imageUrls != null && !imageUrls.isEmpty()) {
             this.img_url_1 = imageUrls.get(0);
             if (imageUrls.size() > 1) {

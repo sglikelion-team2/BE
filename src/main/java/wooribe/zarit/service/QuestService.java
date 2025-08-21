@@ -1,6 +1,7 @@
 package wooribe.zarit.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QuestService {
+    @Value("${application.url}")
+    private String serverAddress;
+
     private final UserRepository userRepository;
     private final PinNoiseRepository pinNoiseRepository;
     private final PinWifiRepository pinWifiRepository;
@@ -163,21 +167,38 @@ public class QuestService {
         Pin pin = pinRepository.findByName(pinName)
                 .orElseThrow(() -> new IllegalArgumentException("핀을 찾을 수 없습니다."));
 
-        String photoUrl = fileStorageService.saveFile(file, "photos");
+//        String photoUrl = fileStorageService.saveFile(file, "photos");
+//
+//        // 1. Pin_photo 엔티티 생성 및 저장 (기존 로직)
+//        Pin_photo pinPhoto = new Pin_photo();
+//        pinPhoto.setPin(pin);
+//        pinPhoto.setPhoto(photoUrl);
+//        pinPhotoRepository.save(pinPhoto);
+//
+//        // 2. Photo 엔티티 생성 및 저장 (새로 추가된 로직)
+//        Photo newPhoto = Photo.builder()
+//                .pin(pin)
+//                .photo(photoUrl)
+//                .is_cafe(false) // 퀘스트로 올리는 사진은 카페올린게 아님
+//                .build();
+//        photoRepository.save(newPhoto);
+        String relativePath = fileStorageService.saveFile(file, "photos");
+         // 예시: 로컬 환경
 
-        // 1. Pin_photo 엔티티 생성 및 저장 (기존 로직)
+        String absoluteUrl = serverAddress + relativePath;
+
         Pin_photo pinPhoto = new Pin_photo();
         pinPhoto.setPin(pin);
-        pinPhoto.setPhoto(photoUrl);
+        pinPhoto.setPhoto(absoluteUrl); // 절대 경로를 DB에 저장
         pinPhotoRepository.save(pinPhoto);
 
-        // 2. Photo 엔티티 생성 및 저장 (새로 추가된 로직)
         Photo newPhoto = Photo.builder()
                 .pin(pin)
-                .photo(photoUrl)
-                .is_cafe(false) // 퀘스트로 올리는 사진은 카페올린게 아님
+                .photo(absoluteUrl) // 절대 경로를 DB에 저장
+                .is_cafe(false)
                 .build();
         photoRepository.save(newPhoto);
+
 
         int points = 20;
         user.addPoint(points);
