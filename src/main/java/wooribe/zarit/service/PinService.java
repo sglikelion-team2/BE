@@ -50,7 +50,7 @@ public class PinService {
         userRecommendationRepository.save(recommendation);
 
         // 3. 응답 DTO 생성
-        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 1.0);
+        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 5.0);
         Map<Long, Integer> rankMap = rankedPinIds.stream()
                 .limit(5)
                 .collect(Collectors.toMap(Function.identity(), id -> rankedPinIds.indexOf(id) + 1));

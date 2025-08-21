@@ -2,7 +2,7 @@ server:
   port: 8080 # 내장 톰캣 포트번호
 
 application:
-  url: http://localhost:8080
+  url: http://3.39.6.173:8080
 
 spring:
   application:
@@ -12,7 +12,7 @@ spring:
     url: jdbc:mysql://localhost:3306/zarit?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: woori
-    password: 1234
+    password: Zarit1234!
 
   servlet:
     multipart:
