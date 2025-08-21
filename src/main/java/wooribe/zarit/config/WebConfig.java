@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
         // 'file:///C:/project_images/' 경로에서 파일을 찾아 제공합니다.
         // 중요: 이 경로는 예시이며, 실제 이미지를 저장할 폴더 경로로 수정해야 합니다.
         // 또한, 애플리케이션을 실행하기 전에 해당 폴더를 직접 생성해야 합니다.
-        registry.addResourceHandler("/images/**")
+        registry.addResourceHandler("/project_images/**")
                 .addResourceLocations("file:project_images/");
     }
 }
