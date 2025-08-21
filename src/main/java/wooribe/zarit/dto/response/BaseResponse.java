@@ -10,7 +10,7 @@ import lombok.Getter;
 public class BaseResponse<T> {
 
     @JsonProperty("isSuccess")
-    private final boolean isSuccess;
+    private final Boolean isSuccess;
     private final int code;
     private final String message;
 
