@@ -130,10 +130,6 @@ public class PinService {
                 .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
                 .map(Photo::getPhoto) // 이제 변수를 사용!
                 .collect(Collectors.toList());
-//        List<String> imageUrls = pin.getPhotos().stream()
-//                .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
-//                .map(Photo::getPhoto)
-//                .collect(Collectors.toList());
 
         return new CafeDetailResponseDto(pin, noise, wifi, congestionLevel, imageUrls);
     }

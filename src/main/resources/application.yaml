@@ -2,7 +2,7 @@ server:
   port: 8080 # 내장 톰캣 포트번호
 
 application:
-  url: http://localhost:8080
+  url: http://3.39.6.173:8080
 
 spring:
   application:
