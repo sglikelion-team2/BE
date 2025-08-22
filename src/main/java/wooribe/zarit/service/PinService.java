@@ -174,7 +174,6 @@ public class PinService {
                 .orElseThrow(() -> new NoSuchElementException("해당하는 카페를 찾을 수 없습니다."));
 
         List<String> imageUrls = pin.getPhotos().stream()
-                .filter(photo -> photo.getIs_cafe() != null && !photo.getIs_cafe())
                 .map(Photo::getPhoto)
                 .collect(Collectors.toList());
 
