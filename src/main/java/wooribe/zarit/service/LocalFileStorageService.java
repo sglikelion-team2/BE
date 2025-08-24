@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Service
 public class LocalFileStorageService {
-    private final Path root = Paths.get("zarit/project_images"); // 파일을 저장할 기본 경로
+    private final Path root = Paths.get("/home/ec2-user/BE/project_images"); // 파일을 저장할 기본 경로
 
     public String saveFile(MultipartFile file, String folder) {
         try {
@@ -25,7 +25,7 @@ public class LocalFileStorageService {
             Files.copy(file.getInputStream(), path);
 
             // 저장된 파일의 URL 반환
-            return "/zarit/project_images/" + folder + "/" + fileName;
+            return "/BE/project_images/" + folder + "/" + fileName;
         } catch (IOException e) {
             throw new RuntimeException("파일 저장 실패: " + e.getMessage());
         }

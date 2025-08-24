@@ -40,9 +40,9 @@ public class User_preference {
 
     // 선호도 정보를 업데이트하는 메서드 추가
     public void update(Purpose purpose, Atmos atmos, Facility facility) {
-        this.purpose = purpose;
-        this.atmos = atmos;
-        this.facility = facility;
+        if (purpose != null) this.purpose = purpose;
+        if (atmos != null) this.atmos = atmos;
+        this.facility = (facility != null) ? facility : Facility.NONE;
     }
 
 }

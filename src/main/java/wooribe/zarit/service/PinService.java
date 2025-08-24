@@ -50,7 +50,7 @@ public class PinService {
         userRecommendationRepository.save(recommendation);
 
         // 3. 응답 DTO 생성
-        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 5.0);
+        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 100.0);
         Map<Long, Integer> rankMap = rankedPinIds.stream()
                 .limit(5)
                 .collect(Collectors.toMap(Function.identity(), id -> rankedPinIds.indexOf(id) + 1));
@@ -98,13 +98,34 @@ public class PinService {
         User_preference preference = user.getUser_preference();
         if (preference == null) throw new NoSuchElementException("사용자 선호도 정보가 없습니다.");
 
-        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 1.0);
+        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 100.0);
+        int count = nearbyPins.size();
+        System.out.println("근처 핀 개수: " + count);
         LocalTime now = LocalTime.now();
         List<Pin> candidatePins = nearbyPins.stream()
-                .filter(pin -> pin.getOpen_hour() != null && pin.getClose_hour() != null)
-                .filter(pin -> !now.isBefore(pin.getOpen_hour()) && !now.isAfter(pin.getClose_hour()))
+                .filter(pin -> {
+                    LocalTime open = pin.getOpen_hour();
+                    LocalTime close = pin.getClose_hour();
+                    
+                    // open과 close가 null이 아닌지 먼저 확인
+                    if (open == null || close == null) {
+                        return false;
+                    }
+                
+                    // Case 1: 일반 영업 (09:00 ~ 22:00) 또는 24시간 영업
+                    // open 시간이 close 시간보다 이르거나 같은 경우
+                    if (!open.isAfter(close)) {
+                        return !now.isBefore(open) && !now.isAfter(close);
+                    } 
+                    // Case 2: 심야 영업 (18:00 ~ 02:00)
+                    // open 시간이 close 시간보다 늦은 경우
+                    else {
+                        // 현재 시간이 open 시간 이후이거나, close 시간 이전인 경우
+                        return !now.isBefore(open) || !now.isAfter(close);
+                    }
+                })
                 .collect(Collectors.toList());
-
+        System.out.println("현재 영업 중인 후보 핀 개수: " + candidatePins.size());
         if (candidatePins.isEmpty()) return new ArrayList<>();
 
         String prompt = buildRecommendationPrompt(preference, candidatePins, lat, lng);
@@ -130,10 +151,6 @@ public class PinService {
                 .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
                 .map(Photo::getPhoto) // 이제 변수를 사용!
                 .collect(Collectors.toList());
-//        List<String> imageUrls = pin.getPhotos().stream()
-//                .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
-//                .map(Photo::getPhoto)
-//                .collect(Collectors.toList());
 
         return new CafeDetailResponseDto(pin, noise, wifi, congestionLevel, imageUrls);
     }
@@ -160,7 +177,10 @@ public class PinService {
             }
         }
 
-        sb.append("\nBased on all this information, provide ALWAYS 5 ranked list of the cafe names. 언제나 꼭 5개로 줘야해. 중복된 값 말고. Your response MUST be a JSON array of strings, containing only the names of the cafes in the recommended order. 반드시 순수한 JSON 형식으로만 응답해줘. 다른 설명이나 마크다운은 절대 포함하지 마.For example: [\"cafe_A\", \"cafe_B\", \"cafe_C\",\"cafe_D\",\"cafe_E\"]");
+        sb.append("\nBased on all this information, ALWAYS provide a ranked list of exactly 5 unique cafe names. Your response MUST be a JSON array of strings, containing only the names of the cafes in the recommended order. You MUST respond in pure JSON format only. DO NOT include any other descriptions or markdown. For example: [\"cafe_A\", \"cafe_B\", \"cafe_C\",\"cafe_D\",\"cafe_E\"]");
+        System.out.println("---------- Generated Prompt ----------");
+        System.out.println(sb.toString());
+        System.out.println("------------------------------------");
         return sb.toString();
     }
 
@@ -178,7 +198,6 @@ public class PinService {
                 .orElseThrow(() -> new NoSuchElementException("해당하는 카페를 찾을 수 없습니다."));
 
         List<String> imageUrls = pin.getPhotos().stream()
-                .filter(photo -> photo.getIs_cafe() != null && !photo.getIs_cafe())
                 .map(Photo::getPhoto)
                 .collect(Collectors.toList());
 
@@ -191,7 +210,7 @@ public class PinService {
 
     private int convertCongestionLevel(double congestion) {
         if (congestion < 40) return 0; // 여유
-        if (congestion < 80) return 1; // 보통
+        if (congestion < 70) return 1; // 보통
         return 2; // 혼잡
     }
 }

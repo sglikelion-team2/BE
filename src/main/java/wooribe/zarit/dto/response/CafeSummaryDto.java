@@ -49,8 +49,8 @@ public class CafeSummaryDto {
         this.wifi = wifi;
         this.congestion = congestion;
 
-        String serverIp = "http://localhost:8080"; // 예시 주소
-
+        //String serverIp = "http://localhost:8080"; // 예시 주소
+        String serverIp = "";
         List<String> cafePhotoUrls = pin.getPhotos().stream()
                 .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
                 .map(Photo::getPhoto)
@@ -59,15 +59,7 @@ public class CafeSummaryDto {
         // DB에 상대 경로가 저장되어 있다면 이처럼 URL을 합쳐줘야 함
         this.img_url1 = cafePhotoUrls.size() > 0 ? serverIp + cafePhotoUrls.get(0) : null;
         this.img_url2 = cafePhotoUrls.size() > 1 ? serverIp + cafePhotoUrls.get(1) : null;
-        // is_cafe가 true인 사진 목록을 가져옴
-//        List<String> cafePhotoUrls = pin.getPhotos().stream()
-//                .filter(photo -> photo.getIs_cafe() != null && photo.getIs_cafe())
-//                .map(Photo::getPhoto)
-//                .collect(Collectors.toList());
-//
-//        // 첫 번째와 두 번째 사진 URL을 할당
-//        this.img_url1 = cafePhotoUrls.size() > 0 ? cafePhotoUrls.get(0) : null;
-//        this.img_url2 = cafePhotoUrls.size() > 1 ? cafePhotoUrls.get(1) : null;
+        
     }
 
     private Map<String, Integer> parseSeatInfo(String seatJson) {
