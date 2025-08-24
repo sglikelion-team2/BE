@@ -2,7 +2,7 @@ server:
   port: 8080 # 내장 톰캣 포트번호
 
 application:
-  url: http://3.39.6.173:8080
+  url: https://zarit.store
 
 spring:
   application:
@@ -28,4 +28,8 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+ai:
+  api:
+    url: https://factchat-cloud.mindlogic.ai/v1/api/openai/chat/completions
+    key: ${AI_API_KEY:twsFLA4VpA9cee6DCAZ81uZTYC0nQOvR}
 
