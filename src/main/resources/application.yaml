@@ -28,8 +28,4 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
-ai:
-  api:
-    url: https://factchat-cloud.mindlogic.ai/v1/api/openai/chat/completions
-    key: ${AI_API_KEY:twsFLA4VpA9cee6DCAZ81uZTYC0nQOvR}
 
