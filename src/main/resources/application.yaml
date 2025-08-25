@@ -31,5 +31,5 @@ spring:
 ai:
   api:
     url: https://factchat-cloud.mindlogic.ai/v1/api/openai/chat/completions
-    key: ${AI_API_KEY:twsFLA4VpA9cee6DCAZ81uZTYC0nQOvR}
+    key: ${AI_API_KEY:GxaSIs2YK5W5s0RHUPD5yfHd9CCOHsaf}
 

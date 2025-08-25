@@ -50,7 +50,7 @@ public class PinService {
         userRecommendationRepository.save(recommendation);
 
         // 3. 응답 DTO 생성
-        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 100.0);
+        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 1.0);
         Map<Long, Integer> rankMap = rankedPinIds.stream()
                 .limit(5)
                 .collect(Collectors.toMap(Function.identity(), id -> rankedPinIds.indexOf(id) + 1));
@@ -98,7 +98,7 @@ public class PinService {
         User_preference preference = user.getUser_preference();
         if (preference == null) throw new NoSuchElementException("사용자 선호도 정보가 없습니다.");
 
-        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 100.0);
+        List<Pin> nearbyPins = pinRepository.findPinsWithinDistance(lat, lng, 1.0);
         int count = nearbyPins.size();
         System.out.println("근처 핀 개수: " + count);
         LocalTime now = LocalTime.now();

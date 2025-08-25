@@ -36,13 +36,13 @@ public class User_preference {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private Facility facility = Facility.POWER; // 기본값 '콘센트(0)'
+    private Facility facility = Facility.NONEE; // 기본값 '콘센트(0)'
 
     // 선호도 정보를 업데이트하는 메서드 추가
     public void update(Purpose purpose, Atmos atmos, Facility facility) {
         if (purpose != null) this.purpose = purpose;
         if (atmos != null) this.atmos = atmos;
-        this.facility = (facility != null) ? facility : Facility.NONE;
+        this.facility = (facility != null) ? facility : Facility.NONEE;
     }
 
 }
